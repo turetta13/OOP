@@ -20,30 +20,71 @@ $users = [['login' => 'Vasisualiy', 'password' => '12345', 'lang' => 'ru'],
 
 <?php
 
+// класс USERS!
 class Users
 {
     public $login;
     public $password;
     public $lang;
 
-    public function __construct($login, $password)
+    public function __construct($login, $password, $lang)
     {
         $this->login = $login;
         $this->password = $password;
+        $this->lang = $lang;
     }
 
     public function getUser()
     {
-        return "{$this->login} говорит на языке ";
+        return "{$this->login} ваш язык {$this->lang}";
     }
 }
 
-$users1 = new Users($_POST['login'], $_POST['password']);
+// класс TRANS!
+class Trans
+{
+    public $language;
 
-foreach ($users as $value) {
-    if ($users1->login == $value['login'] && $users1->password == $value['password']) {
-        $_SESSION['user'] = $value;
-        echo $users1->getUser() . $value['lang'];
+    public function __construct()
+    {
+        $this->language = ['ua' => 'Привiт', 'ru' => 'Привет', 'en' => 'Hello', 'it' => 'Ciao'];
     }
+
+    public function getLang()
+    {
+        return $this->language;
+    }
+}
+
+// Создание юзера!
+foreach ($users as $key => $value) {
+    if ($_POST['login'] == $value['login'] && $_POST['password'] == $value['password']) {
+        $users1 = new Users($_POST['login'], $_POST['password'], $value['lang']);
+        $trans = new Trans($value['lang']);
+        $_SESSION['user'] = $key;
+        break;
+    }
+}
+//вывод юзера
+if ($_SESSION['user'] == $key && $value['lang'] == true) {
+    echo $trans->language[$value['lang']] . ' ' . $users1->getUser();
+} else {
+    if (isset($_POST['login']) && $value['lang'] == true) {
+        echo "неверный логин или пароль";
+    }
+}
+
+
+// вариант если язык не определен! Но пока не работает!!
+if ($value['lang'] == null) {
+    $users2 = new Users ($_POST['login'], $_POST['password'], $_POST['lang']);
+    $_SESSION['user'] = $key;
+    echo $value['login'] . " выберите язык на котром вам удобно общаться ru, ua, it, en";
+    echo ' <form method="POST">
+    <input type="text" name="lang">
+    <input type="submit" value="ok" name="">
+     </form> ';
+    $trans2 = new Trans ($_POST['lang']);
+    echo $trans2->language[$_POST['lang']] . ' ' . $users2->getUser();
 }
 ?>
