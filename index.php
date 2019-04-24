@@ -38,8 +38,8 @@ class Users
     {
         return "{$this->login} ваш язык {$this->lang}";
     }
-}
 
+}
 // класс TRANS!
 class Trans
 {
@@ -56,6 +56,11 @@ class Trans
     }
 }
 
+// ФУНКЦИЯ Создание юзера!
+function createUser ($name,$login,$password,$lang)
+{
+    return $name = new Users($login, $password, $lang);
+}
 // Создание юзера!
 foreach ($users as $key => $value) {
     if ($_POST['login'] == $value['login'] && $_POST['password'] == $value['password']) {
